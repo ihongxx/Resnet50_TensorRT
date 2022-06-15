@@ -1,6 +1,6 @@
 # Resnet50_TensorRT
 
-本项目介绍了深度学习中TensorRT对Resnet50图像分类算法的推理加速。包括：
+本项目介绍了深度学习中TensorRT对Resnet50图像分类算法的推理加速。包括：\
 1、根据预训练模型生成torch模型；
 2、根据torch模型生成onnx模型；
 3、根据onnx模型生成trt fp32 模型；
