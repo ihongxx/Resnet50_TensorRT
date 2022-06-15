@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     inference_times = 100
 
-    test_img = './data/reflex_camera.JPEG'
+    test_img = './data/binoculars.JPEG'
     labels_file = 'class_labels.txt'
     labels = open(labels_file, 'r').read().split('\n')
 
