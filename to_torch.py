@@ -14,7 +14,6 @@ class Classifier(torch.nn.Module):
         super().__init__()
         # 使用torchvision自带的预训练模型
         self.backbone = torchvision.models.resnet50(pretrained=False)
-        # self.backbone.load_state_dict(torch.load("./model/pre/resnet50-0676ba61.pth"))
     
     def forward(self, x):
         feature = self.backbone(x)
