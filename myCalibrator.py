@@ -1,13 +1,14 @@
 from tkinter import N
 from tkinter.tix import IMAGE
 from matplotlib.pyplot import cla
-import tensorrt as trt
 import os
 import numpy as np
 import torchvision.transforms as transforms
 import pycuda.driver as cuda
-from PIL import Image
 import pycuda.autoinit
+from PIL import Image
+import tensorrt as trt
+
 
 class Resnet50EntropyCalibrator(trt.IInt8EntropyCalibrator2):
 
@@ -31,7 +32,7 @@ class Resnet50EntropyCalibrator(trt.IInt8EntropyCalibrator2):
         for line in self._lines:
             line = line.strip()
             # line = line.split(' ')[0]
-            self.imgs.append(os.path.join('E:/Datasets/IMAGES/image_cls/ILSVRC2012_img_val/', line))
+            self.imgs.append(os.path.join(args.img_dir, line))
         self.current_idx = 0
         self.max_batch_idx = len(self.imgs)//self.batch_size  # 一共多少个块
         self.data_size = trt.volume([self.batch_size, self.Channel,self.Height, self.Width]) * trt.float32.itemsize
