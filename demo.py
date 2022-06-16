@@ -42,10 +42,10 @@ def load_checkpoint(net, pretrained):
 
     return net
 
-def create_torch_model():
+def create_torch_model(args):
     model = Classifier()
     # model = load_checkpoint(model, pretrained='./model/pth/resnet50.pth')
-    model.load_state_dict(torch.load('./model/pth/resnet50.pth'))
+    model.load_state_dict(torch.load(args.torch_file_path))
 
     return model
 
@@ -117,19 +117,22 @@ if __name__ == '__main__':
     parser.add_argument('--channel', type=int, default=3)
     parser.add_argument('--height', type=int, default=224)
     parser.add_argument('--width', type=int, default=224)
-    # parser.add_argument('--mode', type=str, default='int8')
-    # parser.add_argument("--onnx_file_path", type=str, default='./model/onnx/resnet50.onnx', help='onnx_file_path')
-    # parser.add_argument("--engine_file_path", type=str, default='./model/trt/resnet50_int8.engine', help='engine_file_path')
+    parser.add_argument('--test_image', type=str, default='./data/binoculars.JPEG')
+    parser.add_argument('--labels_file', type=str, default='./data/class_labels.txt', help='IMAGENET 1000 class labels')
+    parser.add_argument("--torch_file_path", type=str, default='./model/pth/resnet50.pth', help='torch_file_path')
+    parser.add_argument("--trt_fp32_file_path", type=str, default='./model/trt/resnet50_fp32.engine', help='fp32_engine_file_path')
+    parser.add_argument("--trt_fp16_file_path", type=str, default='./model/trt/resnet50_fp16.engine', help='fp16_engine_file_path')
+    parser.add_argument("--trt_int8_file_path", type=str, default='./model/trt/resnet50_int8.engine', help='int8_engine_file_path')
     args = parser.parse_args()
 
     inference_times = 100
 
-    test_img = './data/binoculars.JPEG'
-    labels_file = './data/class_labels.txt'
+    test_img = args.test_image
+    labels_file = args.labels_file
     labels = open(labels_file, 'r').read().split('\n')
 
 
-    model_torch = create_torch_model()
+    model_torch = create_torch_model(args)
     model_torch.eval()
     model_torch.cuda()
 
@@ -156,7 +159,7 @@ if __name__ == '__main__':
     print("Correctly recognized " + test_img + " as " + pred)
 
 
-    engine_file = './model/trt/resnet50_fp32.engine'
+    engine_file = args.trt_fp32_file_path
     engine = loadEngine2TensorRT(engine_file)
     inputs, outputs, bindings, stream = allocate_buffers(engine)
     context = engine.create_execution_context()
@@ -172,7 +175,7 @@ if __name__ == '__main__':
 
 
 
-    engine_file = './model/trt/resnet50_fp16.engine'
+    engine_file = args.trt_fp16_file_path
     engine = loadEngine2TensorRT(engine_file)
     inputs, outputs, bindings, stream = allocate_buffers(engine)
     context = engine.create_execution_context()
@@ -187,7 +190,7 @@ if __name__ == '__main__':
     print("Correctly recognized " + test_case + " as " + pred)
 
 
-    engine_file = './model/trt/resnet50_int8.engine'
+    engine_file = args.trt_int8_file_path
     engine = loadEngine2TensorRT(engine_file)
     inputs, outputs, bindings, stream = allocate_buffers(engine)
     context = engine.create_execution_context()
