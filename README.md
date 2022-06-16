@@ -24,34 +24,44 @@
 ## 一、Build torch model
 ```
 # 利用Resnet50预训练模型resnet50-0676ba61.pth构建torch模型
-python to_torch.py --pretrained_model ./model/pre/resnet50-0676ba61.pth --torch_file_path ./model/pth/resnet50.pth
+python to_torch.py --pretrained_model ./model/pre/resnet50-0676ba61.pth \
+                   --torch_file_path ./model/pth/resnet50.pth
 ```
 
 ## 二、Build onnx model
 ```
 # 利用torch模型构建onnx模型
-python to_onnx.py --torch_file_path ./model/pth/resnet50.pth --onnx_file_path ./model/onnx/resnet50.onnx
+python to_onnx.py --torch_file_path ./model/pth/resnet50.pth \
+                  --onnx_file_path ./model/onnx/resnet50.onnx
 ```
 
 ## 三、Build trt model
 ```
 # 利用onnx模型构建trt fp32推理引擎
-python to_trt.py --onnx_file_path ./model/onnx/resnet50.onnx --engine_file_path ./model/trt/resnet50_fp32.engine
+python to_trt.py --onnx_file_path ./model/onnx/resnet50.onnx \
+                 --engine_file_path ./model/trt/resnet50_fp32.engine
 
 # 利用onnx模型构建trt fp16推理引擎
-python to_trt.py --mode fp16 --onnx_file_path ./model/onnx/resnet50.onnx --engine_file_path ./model/trt/resnet50_fp16.engine
+python to_trt.py --mode fp16 --onnx_file_path ./model/onnx/resnet50.onnx \
+                 --engine_file_path ./model/trt/resnet50_fp16.engine
 
 # 利用onnx模型构建trt int8推理引擎
-python to_trt.py --mode int8 --cache_file ./resnet50_calibration.cache --img_dir E:/Datasets/IMAGES/image_cls/ILSVRC2012_img_val/ \
-                  --onnx_file_path ./model/onnx/resnet50.onnx --engine_file_path ./model/trt/resnet50_int8.engine
+python to_trt.py --mode int8 \
+                 --cache_file ./resnet50_calibration.cache \
+                 --img_dir E:/Datasets/IMAGES/image_cls/ILSVRC2012_img_val/ \
+                 --onnx_file_path ./model/onnx/resnet50.onnx \
+                 --engine_file_path ./model/trt/resnet50_int8.engine
 
 ```
 
 ## 四、Inference
 ```
 # 对torch模型以及fp32、fp16、int8引擎进行推理
-python demo.py --test_image ./data/binoculars.JPEG --labels_file ./data/class_labels.txt --torch_file_path ./model/pth/resnet50.pth \
-               --trt_fp32_file_path ./model/trt/resnet50_fp32.engine --trt_fp16_file_path ./model/trt/resnet50_fp16.engine \
+python demo.py --test_image ./data/binoculars.JPEG \
+               --labels_file ./data/class_labels.txt \
+               --torch_file_path ./model/pth/resnet50.pth \
+               --trt_fp32_file_path ./model/trt/resnet50_fp32.engine \
+               --trt_fp16_file_path ./model/trt/resnet50_fp16.engine \
                --trt_int8_file_path ./model/trt/resnet50_int8.engine
 ```
 
