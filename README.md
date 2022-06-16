@@ -50,7 +50,9 @@ python to_trt.py --mode int8 --cache_file ./resnet50_calibration.cache --img_dir
 ## 四、Inference
 ```
 # 对torch模型以及fp32、fp16、int8引擎进行推理
-python demo.py
+python demo.py --test_image ./data/binoculars.JPEG --labels_file ./data/class_labels.txt --torch_file_path ./model/pth/resnet50.pth \
+               --trt_fp32_file_path ./model/trt/resnet50_fp32.engine --trt_fp16_file_path ./model/trt/resnet50_fp16.engine \
+               --trt_int8_file_path ./model/trt/resnet50_int8.engine
 ```
 
 ## 五、Inference Results
